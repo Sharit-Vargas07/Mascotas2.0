@@ -1,14 +1,18 @@
-import { Router } from "express"
-import  {registrarAdmin, listarUsuarios, buscarUsuarios, actualizarUsuario, registrarUsuarios} from '../controllers/usuarios.controller.js';
+import { Router } from "express";
+// controllers
+import { listarUsuarios, registrarUsuario, actualizarUsuario, eliminarUsuario, buscarUsuario } from "../controllers/usuarios.controller.js";
+// validacion de datos
+import { validateRegistroUsuario, validateActualizarUsuario } from "../validation/usuarios.validation.js";
+// valida por token
+import { validarToken } from "../controllers/validacion.controller.js";
+
+const usuarioRoutes = Router();
+
+usuarioRoutes.get("/listar", validarToken, listarUsuarios);
+usuarioRoutes.get("/buscar/:id_usuario", validarToken, buscarUsuario);
+usuarioRoutes.post("/registrar", validarToken, validateRegistroUsuario, registrarUsuario);
+usuarioRoutes.put("/actualizar/:id_usuario", validarToken, validateActualizarUsuario, actualizarUsuario);
+usuarioRoutes.delete("/eliminar/:id_usuario", validarToken, eliminarUsuario);
 
 
-
-const rutaUsuario = Router();
-
-rutaUsuario.post('/registrarAdmin', registrarAdmin);
-rutaUsuario.post('/registrarUsuario', registrarUsuarios);
-rutaUsuario.get('/listarUsuario', listarUsuarios);
-rutaUsuario.get('/buscarUsuario/:id_usuarios', buscarUsuarios);
-rutaUsuario.put('/actualizarUsuario/:id_usuarios', actualizarUsuario);
-
-export default rutaUsuario;
+export default usuarioRoutes;

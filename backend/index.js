@@ -1,37 +1,28 @@
-import express  from 'express' 
-import  body_parser from 'body-parser'
-import cors from 'cors'
-import rutaUsuario from './src/routes/usuarios.routes.js'
-import rutaMascota from './src/routes/mascotas.routes.js'
-import rutaAdopcion from './src/routes/adopcion.routes.js'
-import rutaCategoria from './src/routes/categoria.routes.js'
-import rutaRaza from './src/routes/raza.routes.js'
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors"
 
+// enpoint 
+import usuarioRoutes from "./src/routes/usuarios.routes.js";
+import mascotaRoutes from "./src/routes/mascotas.routes.js";
+import vacunaRoutes from "./src/routes/vacunas.routes.js";
 
-//servidor
-const servidor = express()
+// validación usuarios
+import rutaValidacion from './src/routes/validacion.routes.js'
 
-servidor.use(cors())
-servidor.use(body_parser.json())
-servidor.use(body_parser.urlencoded({extended: false}))
+const servidor = express();
 
-servidor.listen(3000, () =>{
-    console.log("esta funcionando en el puerto 3000")
-})
+servidor.use(cors());
+servidor.use(bodyParser.json());
+servidor.use(bodyParser.urlencoded({ extended: false }));
 
-//ruta
-servidor.use('/usuario',rutaUsuario)
-servidor.use('/mascota',rutaMascota)
-servidor.use('/adopcion',rutaAdopcion)
-servidor.use('/categoria',rutaCategoria)
-servidor.use('/raza',rutaRaza)
+// rutas 
+servidor.use(rutaValidacion);
 
+servidor.use("/usuario", usuarioRoutes);
+servidor.use("/mascota", mascotaRoutes);
+servidor.use("/vacuna", vacunaRoutes);
 
-//carpetas documentacion
-/* servidor.set('view engine', 'ejs');
-servidor.set('views','./views');
-servidor.get('/documents',(req,res)=>{
-    res.render('document.ejs');
-}) */
-servidor.use(express.static('./public'));
-
+servidor.listen(3000, () => {
+	console.log("Funcionando en el puerto 3000");
+});

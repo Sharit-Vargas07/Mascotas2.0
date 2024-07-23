@@ -1,9 +1,27 @@
 import fs from 'fs';
 import path from 'path';
 
+// Configuración del tamaño máximo para la imagen
+const MAX_WIDTH = 270;
+const MAX_HEIGHT = 200;
+const MAX_SIZE = 5 * 1024 * 1024; // 5 MB en bytes
+
 // Middleware para manejar la subida de imágenes
 export const uploadImage = (req, res, next) => {
   if (req.file) {
+    // Verifica el tamaño del archivo
+    if (req.file.size > MAX_SIZE) {
+      fs.unlink(req.file.path, (err) => {
+        if (err) {
+          console.error('Error al eliminar el archivo demasiado grande:', err);
+        }
+      });
+      return res.status(400).json({
+        status: 400,
+        message: 'El tamaño del archivo excede el límite permitido'
+      });
+    }
+
     req.body.img = req.file.filename;
   }
   next();
